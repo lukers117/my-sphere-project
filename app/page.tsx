@@ -233,7 +233,7 @@ export default function AdPage() {
         <div className="content">
           <h1 className="title">SEE THE WORLD</h1>
           <p className="subtitle">Luke Stene Presents: A 3D Gallery</p>
-          <Link href="/gallery" className="cta-button">
+          <Link href="/" className="cta-button">
             EXPLORE NOW
           </Link>
         </div>
