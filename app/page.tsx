@@ -14,230 +14,180 @@ export default function AdPage() {
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
       particle.className = 'particle';
-      
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.top = Math.random() * 100 + '%';
+      particle.style.cssText = `
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        left: ${Math.random() * 100}%;
+        top: ${Math.random() * 100}%;
+        animation: float ${15 + Math.random() * 10}s infinite;
+        animation-delay: ${Math.random() * 20}s;
+        pointer-events: none;
+      `;
       particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
       particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
-      particle.style.animationDelay = Math.random() * 20 + 's';
-      particle.style.animationDuration = (15 + Math.random() * 10) + 's';
       
       container.appendChild(particle);
     }
+
+    // Add keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% {
+          transform: translate(0, 0) scale(1);
+          opacity: 0;
+        }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% {
+          transform: translate(var(--tx), var(--ty)) scale(0);
+          opacity: 0;
+        }
+      }
+      @keyframes orbFloat {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(50px, -50px) scale(1.1); }
+        66% { transform: translate(-50px, 50px) scale(0.9); }
+      }
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
 
   return (
-    <>
-      <style jsx>{`
-        .ad-container {
-          position: relative;
-          width: 100vw;
-          height: 100vh;
-          background: #000000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-        }
+    <div 
+      className="ad-container"
+      style={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        background: '#000000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      }}
+    >
+      {/* Orbs */}
+      <div style={{
+        position: 'absolute',
+        width: '700px',
+        height: '700px',
+        background: '#FFB6C1',
+        borderRadius: '50%',
+        filter: 'blur(120px)',
+        opacity: 0.5,
+        top: '-200px',
+        left: '-200px',
+        animation: 'orbFloat 15s infinite ease-in-out',
+        pointerEvents: 'none'
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: '600px',
+        height: '600px',
+        background: '#4169E1',
+        borderRadius: '50%',
+        filter: 'blur(120px)',
+        opacity: 0.5,
+        bottom: '-150px',
+        right: '-150px',
+        animation: 'orbFloat 15s infinite ease-in-out 5s',
+        pointerEvents: 'none'
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: '650px',
+        height: '650px',
+        background: '#228B22',
+        borderRadius: '50%',
+        filter: 'blur(120px)',
+        opacity: 0.5,
+        top: '50%',
+        left: '50%',
+        animation: 'orbFloat 15s infinite ease-in-out 10s',
+        pointerEvents: 'none'
+      }} />
+      
+      {/* Content */}
+      <div style={{
+        textAlign: 'center',
+        zIndex: 10,
+        padding: '0 20px'
+      }}>
+        <h1 style={{
+          fontSize: 'clamp(3rem, 12vw, 8rem)',
+          fontWeight: 900,
+          background: 'linear-gradient(135deg, #FFB6C1 0%, #4169E1 50%, #228B22 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '1rem',
+          letterSpacing: '-0.02em',
+          lineHeight: 1,
+          animation: 'gradientShift 3s ease infinite',
+          backgroundSize: '200% 200%',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          SEE THE WORLD
+        </h1>
         
-        .particle {
-          position: absolute;
-          width: 3px;
-          height: 3px;
-          background: rgba(255, 255, 255, 0.5);
-          border-radius: 50%;
-          animation: float 20s infinite;
-        }
+        <p style={{
+          fontSize: 'clamp(1.2rem, 3vw, 2rem)',
+          color: 'rgba(255, 255, 255, 0.9)',
+          marginBottom: '3rem',
+          fontWeight: 300,
+          letterSpacing: '0.1em',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          Luke Stene Presents: A 3D Gallery
+        </p>
         
-        @keyframes float {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            transform: translate(var(--tx), var(--ty)) scale(0);
-            opacity: 0;
-          }
-        }
-        
-        .content {
-          text-align: center;
-          z-index: 10;
-          animation: fadeInUp 1.5s ease-out;
-        }
-        
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .title {
-          font-size: clamp(3rem, 12vw, 8rem);
-          font-weight: 900;
-          background: linear-gradient(135deg, #FFB6C1 0%, #4169E1 50%, #228B22 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          margin-bottom: 1rem;
-          letter-spacing: -0.02em;
-          line-height: 1;
-          animation: gradientShift 3s ease infinite;
-          background-size: 200% 200%;
-        }
-        
-        @keyframes gradientShift {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-        
-        .subtitle {
-          font-size: clamp(1.2rem, 3vw, 2rem);
-          color: rgba(255, 255, 255, 0.9);
-          margin-bottom: 3rem;
-          font-weight: 300;
-          letter-spacing: 0.1em;
-          animation: fadeIn 2s ease-out 0.5s both;
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        .cta-button {
-          display: inline-block;
-          padding: 1.5rem 4rem;
-          font-size: clamp(1rem, 2vw, 1.5rem);
-          font-weight: 700;
-          color: white;
-          background: linear-gradient(135deg, #FFB6C1 0%, #4169E1 50%, #228B22 100%);
-          border: none;
-          border-radius: 50px;
-          text-decoration: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0 20px 40px rgba(65, 105, 225, 0.4);
-          animation: fadeIn 2s ease-out 1s both, pulse 2s ease-in-out 3s infinite;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .cta-button::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-          transition: left 0.5s;
-        }
-        
-        .cta-button:hover::before {
-          left: 100%;
-        }
-        
-        .cta-button:hover {
-          transform: translateY(-5px) scale(1.05);
-          box-shadow: 0 25px 50px rgba(65, 105, 225, 0.6);
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-        
-        .orb {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(120px);
-          opacity: 0.5;
-          animation: orbFloat 15s infinite ease-in-out;
-        }
-        
-        .orb1 {
-          width: 700px;
-          height: 700px;
-          background: #FFB6C1;
-          top: -200px;
-          left: -200px;
-          animation-delay: 0s;
-        }
-        
-        .orb2 {
-          width: 600px;
-          height: 600px;
-          background: #4169E1;
-          bottom: -150px;
-          right: -150px;
-          animation-delay: 5s;
-        }
-        
-        .orb3 {
-          width: 650px;
-          height: 650px;
-          background: #228B22;
-          top: 50%;
-          left: 50%;
-          animation-delay: 10s;
-        }
-        
-        @keyframes orbFloat {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(50px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-50px, 50px) scale(0.9);
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .cta-button {
-            padding: 1rem 2.5rem;
-          }
-          
-          .subtitle {
-            margin-bottom: 2rem;
-          }
-        }
-      `}</style>
-
-      <div className="ad-container">
-        <div className="orb orb1"></div>
-        <div className="orb orb2"></div>
-        <div className="orb orb3"></div>
-        
-        <div className="content">
-          <h1 className="title">SEE THE WORLD</h1>
-          <p className="subtitle">Luke Stene Presents: A 3D Gallery</p>
-          <Link href="/" className="cta-button">
-            EXPLORE NOW
-          </Link>
-        </div>
+        <Link 
+          href="/gallery"
+          style={{
+            display: 'inline-block',
+            padding: '1.5rem 4rem',
+            fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+            fontWeight: 700,
+            color: 'white',
+            background: 'linear-gradient(135deg, #FFB6C1 0%, #4169E1 50%, #228B22 100%)',
+            border: 'none',
+            borderRadius: '50px',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 20px 40px rgba(65, 105, 225, 0.4)',
+            animation: 'pulse 2s ease-in-out infinite',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-5px) scale(1.05)';
+            e.currentTarget.style.boxShadow = '0 25px 50px rgba(65, 105, 225, 0.6)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 20px 40px rgba(65, 105, 225, 0.4)';
+          }}
+        >
+          EXPLORE NOW
+        </Link>
       </div>
-    </>
+    </div>
   );
 }
